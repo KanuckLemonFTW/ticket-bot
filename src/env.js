@@ -5,7 +5,7 @@ const { colours } = require('leeks.js');
 
 const providers = ['mysql', 'postgresql', 'sqlite'];
 
-// ideally the defaults would be set here too, but the pre-install script may run when `src/` is not available
+// environment variable validations
 const env = {
 	DB_CONNECTION_URL: v =>
 		!!v ||
@@ -20,9 +20,7 @@ const env = {
 	DISCORD_TOKEN: v =>
 		!!v ||
 		new Error('is required'),
-	ENCRYPTION_KEY: v =>
-		(!!v && v.length >= 48) ||
-		new Error('is required and must be at least 48 characters long; run "npm run keygen" to generate a key'),
+	ENCRYPTION_KEY: () => true, // no longer required
 	HTTP_EXTERNAL: v => {
 		if (v?.endsWith('/')) {
 			v = v.slice(0, -1);
