@@ -1,0 +1,33 @@
+name: Run Discord Bot Temporarily
+
+on:
+  workflow_dispatch: # Lets you run it manually from GitHub UI
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Set environment variables
+        run: |
+          echo "DB_PROVIDER=sqlite" >> $GITHUB_ENV
+          echo "DB_CONNECTION_URL=" >> $GITHUB_ENV
+          echo "DISCORD_SECRET=${{ secrets.DISCORD_SECRET }}" >> $GITHUB_ENV
+          echo "DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN }}" >> $GITHUB_ENV
+          echo "ENCRYPTION_KEY=${{ secrets.ENCRYPTION_KEY }}" >> $GITHUB_ENV
+          echo "HTTP_EXTERNAL=http://example.com" >> $GITHUB_ENV
+          echo "HTTP_HOST=0.0.0.0" >> $GITHUB_ENV
+          echo "HTTP_PORT=3000" >> $GITHUB_ENV
+
+      - name: Run bot
+        run: node .
