@@ -1,7 +1,7 @@
 name: Run Discord Bot Temporarily
 
 on:
-  workflow_dispatch: # Lets you run it manually from GitHub UI
+  workflow_dispatch: # lets you start it manually
 
 jobs:
   run-bot:
@@ -18,13 +18,18 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Set environment variables
+      - name: Generate encryption key
+        id: keygen
+        run: |
+          KEY=$(npm run keygen --silent)
+          echo "ENCRYPTION_KEY=$KEY" >> $GITHUB_ENV
+
+      - name: Set other environment variables
         run: |
           echo "DB_PROVIDER=sqlite" >> $GITHUB_ENV
           echo "DB_CONNECTION_URL=" >> $GITHUB_ENV
           echo "DISCORD_SECRET=${{ secrets.DISCORD_SECRET }}" >> $GITHUB_ENV
           echo "DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN }}" >> $GITHUB_ENV
-          echo "ENCRYPTION_KEY=${{ secrets.ENCRYPTION_KEY }}" >> $GITHUB_ENV
           echo "HTTP_EXTERNAL=http://example.com" >> $GITHUB_ENV
           echo "HTTP_HOST=0.0.0.0" >> $GITHUB_ENV
           echo "HTTP_PORT=3000" >> $GITHUB_ENV
